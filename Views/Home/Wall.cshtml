@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "The Wall";
+}
+
+@model WrapperModel
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="">The Wall</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="LogOut">Logout</a>
+      </li>
+    </ul>
+    <span class="navbar-text">
+      Welcome @ViewBag.Username 
+    </span>
+  </div>
+</nav>
+<div class="row" id="margin">
+    <div class="col-10 offset-1">
+        <h1>Post a message</h1>
+        <form asp-action="CreateMessage" method="post" id="margin">
+            <div class="form-group">
+                <textarea asp-for="NewMessage.Text" rows="4" class="form-control"></textarea>
+                <span asp-validation-for="NewMessage.Text"></span>
+            </div>
+            <input type="submit" class="btn btn-outline-info" value="Post">
+        </form>
+        <div class="list-group">
+        @{
+            foreach(Message mes in Model.AllMessages)
+            {
+                <a href="" class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@mes.Creator.FirstName @mes.Creator.LastName</h5>
+                    <small>@mes.Created_at.ToString("MMMM dd, yyyy")</small>
+                  </div>
+                  <p class="mb-1">@mes.Text</p>
+                  @if(@ViewBag.UserId == @mes.Creator.UserId)
+                  {
+                    if(DateTime.Now.Subtract(@mes.Created_at).TotalMinutes <= 30)
+                    {
+                      <a href="/DeleteMes/@mes.MessageId" class="btn btn-sm btn-outline-danger">Delete</a>
+                    }
+                  }
+                </a>
+                <div class="row" id="margin">
+                    <div class="col-8 offset-2">
+                      <div class="list-group">
+                          @{
+                            foreach(Comment com in mes.MessageComments)
+                            {
+                              <a href="" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">@com.Creator.FirstName @com.Creator.LastName</h5>
+                                <small>@com.Created_at.ToString("MMMM dd, yyyy")</small>
+                              </div>
+                              <p class="mb-1">@com.Text</p>
+                              @if(@ViewBag.UserId == @com.Creator.UserId)
+                              {
+                                if(DateTime.Now.Subtract(@com.Created_at).TotalMinutes <= 30)
+                                {
+                                  <a href="/DeleteCom/@com.CommentId" class="btn btn-sm btn-outline-danger">Delete</a>
+                                }
+                              }
+                            </a>
+                            }
+                          }
+                      </div>
+                      <form action="CreateComment/@mes.MessageId" method="post" id="margin">
+                          <div class="form-group">
+                              <label asp-for="NewComment.Text">Post a Comment</label>
+                              <input type="text" asp-for="NewComment.Text" class="form-control">
+                              <span asp-validation-for="NewComment.Text"></span>
+                          </div>
+                          <input type="submit" class="btn btn-outline-info" value="Post">
+                      </form>
+                    </div>
+                </div>
+            }
+        }
+         </div>
+    </div>
+</div>

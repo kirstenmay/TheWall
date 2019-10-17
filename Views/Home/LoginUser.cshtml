@@ -1,0 +1,14 @@
+<form action="/Login" method = "post">
+    @model LoginUser
+    <div class="form-group">
+        <label asp-for="LoginEmail">Email</label>
+        <input type = "email" asp-for="LoginEmail" class = "form-control" placeholder = "Email">
+        <span asp-validation-for="LoginEmail"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LoginPassword">Password</label>
+        <input type = "password" asp-for="LoginPassword" class = "form-control" placeholder = "Password">
+        <span asp-validation-for="LoginPassword"></span>
+    </div>
+    <input value="Login" type="submit" class = "btn btn-outline-success">
+</form>
